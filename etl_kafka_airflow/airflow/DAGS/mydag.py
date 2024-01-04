@@ -1,7 +1,7 @@
 # import the libraries
 
 # Import the datetime and timedelta classes
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 # Import the DAG class from the airflow module
 from airflow import DAG
@@ -20,15 +20,15 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(seconds=5)
+    'retry_delay': timedelta(seconds=5),
 }
 
 # Define a DAG
 dag = DAG(
-    dag_id='simple_etl_dag',
+    'simple_etl_dag',
     default_args=default_args,
     description='A simple DAG using bash',
-    schedule_interval=timedelta(days=1)
+    schedule_interval=timedelta(days=1),
 )
 
 # Define tasks
@@ -37,24 +37,18 @@ dag = DAG(
 
 extract = BashOperator(
     task_id='extract',
-    Bash_command='echo "extracting data"',
-    dag=dag
+    # get the first, third and sixth column of the /etc/passwd file and save it in a new file
+    bash_command='cut -d":" -f1,3,6 /etc/passwd > /tmp/extracted_data.txt',
+    dag=dag,
 )
 
 # Define the second task transform
-transform = BashOperator(
-    task_id='transform',
-    Bash_command='echo "transforming data"',
-    dag=dag
-)
-
-# Define the third task load
-load = BashOperator(
-	task_id='load',
-	Bash_command='echo "loading data"',
-	dag=dag
+transform_and_load = BashOperator(
+    task_id='transform and load',
+    bash_command='tr ":" "," < /tmp/extracted_data.txt > /tmp/transformed_data.csv',
+    dag=dag,
 )
 
 # Define the order of tasks
 
-extract >> transform >> load
+extract >> transform_and_load
