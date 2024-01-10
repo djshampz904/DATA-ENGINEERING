@@ -27,3 +27,25 @@ unzip_data = BashOperator(
     bash_command='tar -xvzf ../tolldata.tgz -C .',
     dag=dag,
 )
+
+# Extract data from csv file from 1st to 4th field
+extract_csv = BashOperator(
+    task_id='extract_csv',
+    bash_command=' cut -d"," -f1-4 vehicle-data.csv > csv_data.csv',
+    dag=dag,
+)
+
+# Extract data from tsv file
+extract_tsv = BashOperator(
+    task_id='extract_tsv',
+    bash_command="cut -d$'\t' -f5-7 tollplaza-data.tsv > tsv_data.tsv",
+    dag=dag,
+)
+
+#Extract data from a fixed width file
+extract_fixed_width = BashOperator(
+    task_id='extract_fixed_width',
+    bash_command="cut -c48-56 payment-data.txt > fixed_width_data.txt",
+    dag=dag,
+)
+
