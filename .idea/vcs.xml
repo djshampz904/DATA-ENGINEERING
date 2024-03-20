@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/labs/fgskh-new_horizons" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/spark_lab/docker-spark" vcs="Git" />
   </component>
 </project>
